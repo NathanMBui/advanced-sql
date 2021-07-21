@@ -2,26 +2,91 @@
 --DROP DATABASE DB_SCHOOL;
 --CREATE DATABASE DB_SCHOOL;
 
+DROP TABLE IF EXISTS ExamResults;
+DROP TABLE IF EXISTS Exams;
+DROP TABLE IF EXISTS Subjects;
 DROP TABLE IF EXISTS Students;
 CREATE TABLE Students (
-	id  serial,
-	name varchar(255),
-	surname varchar(255) NOT NULL,
-	second_name varchar(255),
+	id bigint GENERATED ALWAYS AS IDENTITY,
+	name varchar,
+	surname varchar NOT NULL,
+	second_name varchar,
 	birthday date,
-	phone_numbers varchar(20),
+	phone_numbers varchar,
 	primary_skill text,
-	created_datetime timestamp,
-	updated_datetime timestamp,
+	created_datetime timestamptz,
+	updated_datetime timestamptz,
 	PRIMARY KEY (id)
+);
+
+CREATE TABLE Subjects(
+	id bigint GENERATED ALWAYS AS IDENTITY,
+	name varchar,
+	created_datetime timestamptz,
+	updated_datetime timestamptz,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE Exams(
+	id bigint GENERATED ALWAYS AS IDENTITY,
+	name varchar NOT NULL,
+	created_datetime timestamptz,
+	updated_datetime timestamptz,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE ExamResults(
+	id bigint GENERATED ALWAYS AS IDENTITY,
+	student_id bigint NOT NULL,
+	exam_id bigint NOT NULL,
+	subject_id bigint NOT NULL,
+	score int NOT NULL,
+	created_datetime timestamptz,
+	updated_datetime timestamptz,
+	PRIMARY KEY (id),
+	CONSTRAINT fk_students
+		FOREIGN KEY (student_id)
+			REFERENCES Students(id),
+	CONSTRAINT fk_subjects
+		FOREIGN KEY (subject_id)
+			REFERENCES Subjects(id),
+	CONSTRAINT fk_exams
+		FOREIGN KEY (exam_id)
+			REFERENCES Exams(id)
 );
 
 INSERT INTO Students(name, surname, second_name, primary_skill, created_datetime)
 VALUES 
 ('Tony', 'Stark', 'Iron Man', 'Java-Kotlin', CURRENT_TIMESTAMP),
 ('Thor', 'Odinson', null, 'React', CURRENT_TIMESTAMP),
-('Steve', 'Roger', 'Captain America', 'C# C++', CURRENT_TIMESTAMP)
-('Loki', 'Laufeyson', 'G.', 'C# C++', CURRENT_TIMESTAMP),;
+('Steve', 'Roger', 'Captain America', '.net C# C++', CURRENT_TIMESTAMP),
+('Loki', 'Laufeyson', 'G.', 'Python', CURRENT_TIMESTAMP);
+
+INSERT INTO Subjects(name, created_datetime)
+VALUES 
+('Algorithm', CURRENT_TIMESTAMP),
+('OOP', CURRENT_TIMESTAMP),
+('FP', CURRENT_TIMESTAMP);
+
+INSERT INTO Exams(name, created_datetime)
+VALUES
+('Season 1', CURRENT_TIMESTAMP),
+('Season 2', CURRENT_TIMESTAMP),
+('Season 3', CURRENT_TIMESTAMP);
+
+INSERT INTO ExamResults(student_id, exam_id, subject_id, score, created_datetime)
+VALUES
+(1, 1, 1, 100, CURRENT_TIMESTAMP),
+(1, 1, 2, 50, CURRENT_TIMESTAMP),
+(1, 1, 3, 10, CURRENT_TIMESTAMP),
+
+(2, 1, 1, 80, CURRENT_TIMESTAMP),
+(2, 1, 2, 90, CURRENT_TIMESTAMP),
+(2, 1, 3, 20, CURRENT_TIMESTAMP),
+
+(3, 1, 1, 30, CURRENT_TIMESTAMP),
+(3, 1, 2, 50, CURRENT_TIMESTAMP),
+(3, 1, 3, 10, CURRENT_TIMESTAMP);
 
 --1. Select all primary skills that contain more than one word (please note that both ‘-‘ and ‘ ’ could be used as a separator). – 0.2 points
 SELECT primary_skill
@@ -30,8 +95,13 @@ WHERE primary_skill LIKE '% %'
 OR primary_skill LIKE '%-%';
 
 --2. Select all students who do not have a second name (it is absent or consists of only one letter/letter with a dot). – 0.2 points
+SELECT *
+FROM Students
+WHERE second_name is NULL
+OR second_name LIKE '_.';
 
 --3. Select number of students passed exams for each subject and order result by a number of student descending. – 0.2 points
+
 
 --4. Select the number of students with the same exam marks for each subject. – 0.2 points
 
