@@ -128,6 +128,9 @@ GROUP BY s.name, r.score
 ORDER BY s.name ASC, r.score DESC;
 
 --5. Select students who passed at least two exams for different subjects. – 0.3 points
+
+
+--6. Select students who passed at least two exams for the same subject. – 0.3 points
 SELECT Student, Subject, ExamCount
 FROM (
 	SELECT st.name AS Student, s.name as Subject, Count(*) AS ExamCount
@@ -140,8 +143,6 @@ FROM (
 ) AS Sub
 WHERE ExamCount >= 2
 ORDER BY Student;
-
---6. Select students who passed at least two exams for the same subject. – 0.3 points
 
 --7. Select all subjects which exams passed only students with the same primary skills. – 0.3 points
 
