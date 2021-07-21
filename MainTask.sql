@@ -70,9 +70,9 @@ VALUES
 
 INSERT INTO Exams(name, created_datetime)
 VALUES
-('Season 1', CURRENT_TIMESTAMP),
-('Season 2', CURRENT_TIMESTAMP),
-('Season 3', CURRENT_TIMESTAMP);
+('Semester 1', CURRENT_TIMESTAMP),
+('Semester 2', CURRENT_TIMESTAMP),
+('Semester 3', CURRENT_TIMESTAMP);
 
 INSERT INTO ExamResults(student_id, exam_id, subject_id, score, created_datetime)
 VALUES
@@ -86,7 +86,19 @@ VALUES
 
 (3, 1, 1, 30, CURRENT_TIMESTAMP),
 (3, 1, 2, 50, CURRENT_TIMESTAMP),
-(3, 1, 3, 10, CURRENT_TIMESTAMP);
+(3, 1, 3, 10, CURRENT_TIMESTAMP),
+
+(1, 2, 1, 60, CURRENT_TIMESTAMP),
+(1, 2, 2, 50, CURRENT_TIMESTAMP),
+(1, 2, 3, 10, CURRENT_TIMESTAMP),
+	
+(2, 2, 1, 30, CURRENT_TIMESTAMP),
+(2, 2, 2, 90, CURRENT_TIMESTAMP),
+(2, 2, 3, 20, CURRENT_TIMESTAMP),
+	
+(3, 2, 1, 70, CURRENT_TIMESTAMP),
+(3, 2, 2, 30, CURRENT_TIMESTAMP),
+(3, 2, 3, 60, CURRENT_TIMESTAMP);
 
 --1. Select all primary skills that contain more than one word (please note that both ‘-‘ and ‘ ’ could be used as a separator). – 0.2 points
 SELECT primary_skill
@@ -116,6 +128,18 @@ GROUP BY s.name, r.score
 ORDER BY s.name ASC, r.score DESC;
 
 --5. Select students who passed at least two exams for different subjects. – 0.3 points
+SELECT Student, Subject, ExamCount
+FROM (
+	SELECT st.name AS Student, s.name as Subject, Count(*) AS ExamCount
+	FROM ExamResults AS r
+	INNER JOIN Subjects AS s ON s.id = r.subject_id
+	INNER JOIN Exams AS e ON e.id = r.exam_id
+	INNER JOIN Students AS st ON st.id = r.student_id
+	WHERE r.score >= 50
+	GROUP BY Subject, Student
+) AS Sub
+WHERE ExamCount >= 2
+ORDER BY Student;
 
 --6. Select students who passed at least two exams for the same subject. – 0.3 points
 
