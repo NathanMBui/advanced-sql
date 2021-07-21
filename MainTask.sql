@@ -101,7 +101,12 @@ WHERE second_name is NULL
 OR second_name LIKE '_.';
 
 --3. Select number of students passed exams for each subject and order result by a number of student descending. – 0.2 points
-
+SELECT s.name AS Subject, COUNT(*) AS Passed
+FROM ExamResults AS r
+INNER JOIN Subjects AS s ON r.subject_id = s.id
+WHERE r.score >= 50
+GROUP BY s.name
+ORDER BY Passed DESC
 
 --4. Select the number of students with the same exam marks for each subject. – 0.2 points
 
