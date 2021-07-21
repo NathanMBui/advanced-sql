@@ -128,7 +128,24 @@ GROUP BY s.name, r.score
 ORDER BY s.name ASC, r.score DESC;
 
 --5. Select students who passed at least two exams for different subjects. – 0.3 points
-
+SELECT Student, Count(*) AS ExamCount
+FROM (
+	SELECT DISTINCT Student, Exam
+	FROM (
+		SELECT Student, Subject, Exam 
+		FROM (
+			SELECT st.name AS Student, s.name as Subject, e.name AS Exam, Count(*) AS ExamCount
+			FROM ExamResults AS r
+			INNER JOIN Subjects AS s ON s.id = r.subject_id
+			INNER JOIN Exams AS e ON e.id = r.exam_id
+			INNER JOIN Students AS st ON st.id = r.student_id
+			WHERE r.score >= 50
+			GROUP BY Subject, Student, Exam 
+		) AS Sub
+	) AS Sub2
+) AS Sub3
+GROUP BY Student
+ORDER BY Student
 
 --6. Select students who passed at least two exams for the same subject. – 0.3 points
 SELECT Student, Subject, ExamCount
