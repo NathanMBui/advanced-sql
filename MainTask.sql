@@ -26,7 +26,10 @@ CREATE TABLE Exam_Results (
 );
 
 --1. Select all primary skills that contain more than one word (please note that both ‘-‘ and ‘ ’ could be used as a separator). – 0.2 points
-
+SELECT primary_skill
+FROM Students
+WHERE primary_skill LIKE '% %'
+OR primary_skill LIKE '%-%';
 
 --2. Select all students who do not have a second name (it is absent or consists of only one letter/letter with a dot). – 0.2 points
 
