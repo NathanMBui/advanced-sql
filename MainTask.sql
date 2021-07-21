@@ -7,6 +7,7 @@ CREATE TABLE Students (
 	id  serial,
 	name varchar(255),
 	surname varchar(255) NOT NULL,
+	second_name varchar(255),
 	birthday date,
 	phone_numbers varchar(20),
 	primary_skill text,
@@ -15,15 +16,12 @@ CREATE TABLE Students (
 	PRIMARY KEY (id)
 );
 
-INSERT INTO Students(name, surname, birthday, phone_numbers, primary_skill, created_datetime)
+INSERT INTO Students(name, surname, second_name, primary_skill, created_datetime)
 VALUES 
-('Tony', 'Stark', null, null, 'Java-Kotlin', CURRENT_TIMESTAMP),
-('Thor', 'Odinson', null, null, 'React', CURRENT_TIMESTAMP),
-('Steve', 'Roger', null, null, 'C# C++', CURRENT_TIMESTAMP);
-
-CREATE TABLE Exam_Results (
-
-);
+('Tony', 'Stark', 'Iron Man', 'Java-Kotlin', CURRENT_TIMESTAMP),
+('Thor', 'Odinson', null, 'React', CURRENT_TIMESTAMP),
+('Steve', 'Roger', 'Captain America', 'C# C++', CURRENT_TIMESTAMP)
+('Loki', 'Laufeyson', 'G.', 'C# C++', CURRENT_TIMESTAMP),;
 
 --1. Select all primary skills that contain more than one word (please note that both ‘-‘ and ‘ ’ could be used as a separator). – 0.2 points
 SELECT primary_skill
