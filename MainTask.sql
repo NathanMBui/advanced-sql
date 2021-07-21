@@ -1,6 +1,32 @@
 --Init DATABASE
+--DROP DATABASE DB_SCHOOL;
+--CREATE DATABASE DB_SCHOOL;
+
+DROP TABLE IF EXISTS Students;
+CREATE TABLE Students (
+	id  serial,
+	name varchar(255),
+	surname varchar(255) NOT NULL,
+	birthday date,
+	phone_numbers varchar(20),
+	primary_skill text,
+	created_datetime timestamp,
+	updated_datetime timestamp,
+	PRIMARY KEY (id)
+);
+
+INSERT INTO Students(name, surname, birthday, phone_numbers, primary_skill, created_datetime)
+VALUES 
+('Tony', 'Stark', null, null, 'Java-Kotlin', CURRENT_TIMESTAMP),
+('Thor', 'Odinson', null, null, 'React', CURRENT_TIMESTAMP),
+('Steve', 'Roger', null, null, 'C# C++', CURRENT_TIMESTAMP);
+
+CREATE TABLE Exam_Results (
+
+);
 
 --1. Select all primary skills that contain more than one word (please note that both ‘-‘ and ‘ ’ could be used as a separator). – 0.2 points
+
 
 --2. Select all students who do not have a second name (it is absent or consists of only one letter/letter with a dot). – 0.2 points
 
