@@ -251,8 +251,42 @@ WHERE id NOT IN
 -- Check which approach is faster for 1000, 10K, 100K exams and 10, 1K, 100K students
 
 --10. Select all students whose average mark is bigger than the overall average mark. – 0.3 points
+SELECT S1.exam_id, S1.student_id, S1.AVG
+FROM (
+	SELECT exam_id, student_id , ROUND(AVG(score),2) as AVG
+	FROM ExamResults
+	GROUP BY student_id, exam_id
+	ORDER BY exam_id, student_id
+) AS S1
+INNER JOIN 
+(
+	SELECT exam_id, ROUND(AVG(score), 2) as AVG
+	FROM ExamResults
+	GROUP BY exam_id
+) AS S2
+ON S1.exam_id = S2.exam_id
+WHERE S1.AVG > S2.AVG
+ORDER BY S1.exam_id, S1.student_id;
 
 --11. Select the top 5 students who passed their last exam better than average students. – 0.3 points
+SELECT S1.exam_id, S1.student_id, S1.AVG
+FROM (
+	SELECT exam_id, student_id , ROUND(AVG(score),2) as AVG
+	FROM ExamResults
+	WHERE exam_id = (SELECT MAX(id) FROM Exams)
+	GROUP BY student_id, exam_id
+	ORDER BY exam_id, student_id
+) AS S1
+INNER JOIN 
+(
+	SELECT exam_id, ROUND(AVG(score), 2) as AVG
+	FROM ExamResults
+	GROUP BY exam_id
+) AS S2
+ON S1.exam_id = S2.exam_id
+WHERE S1.AVG > S2.AVG
+ORDER BY S1.exam_id, S1.student_id
+LIMIT(5)
 
 --12. Select the biggest mark for each student and add text description for the mark (use COALESCE and WHEN operators) – 0.3 points
 --	* In case if the student has not passed any exam ‘not passed' should be returned.
