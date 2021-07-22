@@ -102,44 +102,44 @@ VALUES
 (3, 1, 3, 10, CURRENT_TIMESTAMP),
 (3, 2, 1, 70, CURRENT_TIMESTAMP),
 (3, 2, 2, 30, CURRENT_TIMESTAMP),
-(3, 2, 3, 60, CURRENT_TIMESTAMP);
+(3, 2, 3, 60, CURRENT_TIMESTAMP),
 
 (4, 1, 1, 30, CURRENT_TIMESTAMP),
 (4, 1, 2, 50, CURRENT_TIMESTAMP),
 (4, 1, 3, 10, CURRENT_TIMESTAMP),
-(4, 1, 1, 80, CURRENT_TIMESTAMP),
-(4, 1, 2, 30, CURRENT_TIMESTAMP),
-(4, 1, 3, 100, CURRENT_TIMESTAMP),
+(4, 2, 1, 80, CURRENT_TIMESTAMP),
+(4, 2, 2, 30, CURRENT_TIMESTAMP),
+(4, 2, 3, 100, CURRENT_TIMESTAMP),
 
 (5, 1, 1, 90, CURRENT_TIMESTAMP),
 (5, 1, 2, 40, CURRENT_TIMESTAMP),
-(5, 1, 3, 80, CURRENT_TIMESTAMP),
-(5, 1, 1, 10, CURRENT_TIMESTAMP),
-(5, 1, 2, 20, CURRENT_TIMESTAMP),
-(5, 1, 3, 90, CURRENT_TIMESTAMP),
+(5, 2, 3, 80, CURRENT_TIMESTAMP),
+(5, 2, 1, 10, CURRENT_TIMESTAMP),
+(5, 3, 2, 20, CURRENT_TIMESTAMP),
+(5, 3, 3, 90, CURRENT_TIMESTAMP),
 
 (6, 1, 1, 30, CURRENT_TIMESTAMP),
 (6, 1, 2, 80, CURRENT_TIMESTAMP),
-(6, 1, 3, 50, CURRENT_TIMESTAMP),
-(6, 1, 1, 90, CURRENT_TIMESTAMP),
-(6, 1, 2, 50, CURRENT_TIMESTAMP),
-(6, 1, 3, 10, CURRENT_TIMESTAMP),
+(6, 2, 3, 50, CURRENT_TIMESTAMP),
+(6, 2, 1, 90, CURRENT_TIMESTAMP),
+(6, 3, 2, 50, CURRENT_TIMESTAMP),
+(6, 3, 3, 10, CURRENT_TIMESTAMP),
 
 (7, 1, 1, 20, CURRENT_TIMESTAMP),
 (7, 1, 2, 50, CURRENT_TIMESTAMP),
 (7, 1, 3, 90, CURRENT_TIMESTAMP),
-(7, 1, 1, 70, CURRENT_TIMESTAMP),
-(7, 1, 2, 80, CURRENT_TIMESTAMP),
-(7, 1, 3, 90, CURRENT_TIMESTAMP),
-(7, 1, 4, 80, CURRENT_TIMESTAMP),
+(7, 2, 1, 70, CURRENT_TIMESTAMP),
+(7, 2, 2, 80, CURRENT_TIMESTAMP),
+(7, 3, 3, 90, CURRENT_TIMESTAMP),
+(7, 3, 4, 80, CURRENT_TIMESTAMP),
 
 (8, 1, 1, 90, CURRENT_TIMESTAMP),
 (8, 1, 2, 40, CURRENT_TIMESTAMP),
-(8, 1, 3, 80, CURRENT_TIMESTAMP),
-(8, 1, 1, 10, CURRENT_TIMESTAMP),
-(8, 1, 2, 100, CURRENT_TIMESTAMP),
-(8, 1, 3, 80, CURRENT_TIMESTAMP),
-(8, 1, 4, 80, CURRENT_TIMESTAMP);
+(8, 2, 3, 80, CURRENT_TIMESTAMP),
+(8, 2, 1, 10, CURRENT_TIMESTAMP),
+(8, 3, 2, 100, CURRENT_TIMESTAMP),
+(8, 3, 3, 80, CURRENT_TIMESTAMP),
+(8, 3, 4, 80, CURRENT_TIMESTAMP);
 
 --1. Select all primary skills that contain more than one word (please note that both ‘-‘ and ‘ ’ could be used as a separator). – 0.2 points
 SELECT primary_skill
@@ -231,9 +231,25 @@ SELECT Subject
 		HAVING Count(*) > 1;
 		
 --9. Select students who do not pass any exam using each of the following operator: – 0.5 points
---	* Outer join
---	* Subquery with ‘not in’ clause
---	* Subquery with ‘any ‘ clause Check which approach is faster for 1000, 10K, 100K exams and 10, 1K, 100K students
+--	9.1 Outer join
+
+--	9.2 Subquery with ‘not in’ clause
+SELECT id FROM Students
+WHERE id NOT IN
+(
+	SELECT student_id 
+	FROM(
+		SELECT student_id, exam_id, MIN(score) 
+		FROM ExamResults
+		GROUP BY student_id, exam_id
+		HAVING MIN(score) >= 50
+	) AS S
+	GROUP BY student_id
+);
+
+--	9.3 Subquery with ‘any ‘ clause 
+-- Check which approach is faster for 1000, 10K, 100K exams and 10, 1K, 100K students
+
 --10. Select all students whose average mark is bigger than the overall average mark. – 0.3 points
 
 --11. Select the top 5 students who passed their last exam better than average students. – 0.3 points
