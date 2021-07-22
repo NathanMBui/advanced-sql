@@ -60,13 +60,18 @@ VALUES
 ('Tony', 'Stark', 'Iron Man', 'Java-Kotlin', CURRENT_TIMESTAMP),
 ('Thor', 'Odinson', null, 'React', CURRENT_TIMESTAMP),
 ('Steve', 'Roger', 'Captain America', '.net C# C++', CURRENT_TIMESTAMP),
-('Loki', 'Laufeyson', 'G.', 'Python', CURRENT_TIMESTAMP);
+('Loki', 'Laufeyson', 'G.', 'Python', CURRENT_TIMESTAMP),
+('Tony 2', 'Stark', 'Iron Man', 'Java-Kotlin', CURRENT_TIMESTAMP),
+('Thor 2', 'Odinson', null, 'React', CURRENT_TIMESTAMP),
+('Steve 2', 'Roger', 'Captain America', 'C', CURRENT_TIMESTAMP),
+('Loki 2', 'Laufeyson', 'G.', 'C', CURRENT_TIMESTAMP);
 
 INSERT INTO Subjects(name, created_datetime)
 VALUES 
 ('Algorithm', CURRENT_TIMESTAMP),
 ('OOP', CURRENT_TIMESTAMP),
-('FP', CURRENT_TIMESTAMP);
+('FP', CURRENT_TIMESTAMP),
+('Cloud Computing', CURRENT_TIMESTAMP);
 
 INSERT INTO Exams(name, created_datetime)
 VALUES
@@ -79,26 +84,62 @@ VALUES
 (1, 1, 1, 100, CURRENT_TIMESTAMP),
 (1, 1, 2, 50, CURRENT_TIMESTAMP),
 (1, 1, 3, 10, CURRENT_TIMESTAMP),
+(1, 1, 4, 10, CURRENT_TIMESTAMP),
+(1, 2, 1, 60, CURRENT_TIMESTAMP),
+(1, 2, 2, 50, CURRENT_TIMESTAMP),
+(1, 2, 3, 10, CURRENT_TIMESTAMP),
+(1, 2, 4, 10, CURRENT_TIMESTAMP),
 
 (2, 1, 1, 80, CURRENT_TIMESTAMP),
 (2, 1, 2, 90, CURRENT_TIMESTAMP),
 (2, 1, 3, 20, CURRENT_TIMESTAMP),
+(2, 2, 1, 50, CURRENT_TIMESTAMP),
+(2, 2, 2, 20, CURRENT_TIMESTAMP),
+(2, 2, 3, 20, CURRENT_TIMESTAMP),
 
 (3, 1, 1, 30, CURRENT_TIMESTAMP),
 (3, 1, 2, 50, CURRENT_TIMESTAMP),
 (3, 1, 3, 10, CURRENT_TIMESTAMP),
-
-(1, 2, 1, 60, CURRENT_TIMESTAMP),
-(1, 2, 2, 50, CURRENT_TIMESTAMP),
-(1, 2, 3, 10, CURRENT_TIMESTAMP),
-	
-(2, 2, 1, 30, CURRENT_TIMESTAMP),
-(2, 2, 2, 90, CURRENT_TIMESTAMP),
-(2, 2, 3, 20, CURRENT_TIMESTAMP),
-	
 (3, 2, 1, 70, CURRENT_TIMESTAMP),
 (3, 2, 2, 30, CURRENT_TIMESTAMP),
 (3, 2, 3, 60, CURRENT_TIMESTAMP);
+
+(4, 1, 1, 30, CURRENT_TIMESTAMP),
+(4, 1, 2, 50, CURRENT_TIMESTAMP),
+(4, 1, 3, 10, CURRENT_TIMESTAMP),
+(4, 1, 1, 80, CURRENT_TIMESTAMP),
+(4, 1, 2, 30, CURRENT_TIMESTAMP),
+(4, 1, 3, 100, CURRENT_TIMESTAMP),
+
+(5, 1, 1, 90, CURRENT_TIMESTAMP),
+(5, 1, 2, 40, CURRENT_TIMESTAMP),
+(5, 1, 3, 80, CURRENT_TIMESTAMP),
+(5, 1, 1, 10, CURRENT_TIMESTAMP),
+(5, 1, 2, 20, CURRENT_TIMESTAMP),
+(5, 1, 3, 90, CURRENT_TIMESTAMP),
+
+(6, 1, 1, 30, CURRENT_TIMESTAMP),
+(6, 1, 2, 80, CURRENT_TIMESTAMP),
+(6, 1, 3, 50, CURRENT_TIMESTAMP),
+(6, 1, 1, 90, CURRENT_TIMESTAMP),
+(6, 1, 2, 50, CURRENT_TIMESTAMP),
+(6, 1, 3, 10, CURRENT_TIMESTAMP),
+
+(7, 1, 1, 20, CURRENT_TIMESTAMP),
+(7, 1, 2, 50, CURRENT_TIMESTAMP),
+(7, 1, 3, 90, CURRENT_TIMESTAMP),
+(7, 1, 1, 70, CURRENT_TIMESTAMP),
+(7, 1, 2, 80, CURRENT_TIMESTAMP),
+(7, 1, 3, 90, CURRENT_TIMESTAMP),
+(7, 1, 4, 80, CURRENT_TIMESTAMP),
+
+(8, 1, 1, 90, CURRENT_TIMESTAMP),
+(8, 1, 2, 40, CURRENT_TIMESTAMP),
+(8, 1, 3, 80, CURRENT_TIMESTAMP),
+(8, 1, 1, 10, CURRENT_TIMESTAMP),
+(8, 1, 2, 100, CURRENT_TIMESTAMP),
+(8, 1, 3, 80, CURRENT_TIMESTAMP),
+(8, 1, 4, 80, CURRENT_TIMESTAMP);
 
 --1. Select all primary skills that contain more than one word (please note that both ‘-‘ and ‘ ’ could be used as a separator). – 0.2 points
 SELECT primary_skill
@@ -162,9 +203,33 @@ WHERE ExamCount >= 2
 ORDER BY Student;
 
 --7. Select all subjects which exams passed only students with the same primary skills. – 0.3 points
-
+SELECT Subject
+		FROM (
+			SELECT DISTINCT s.name as Subject, st.primary_skill AS Skills
+			FROM ExamResults AS r
+			INNER JOIN Subjects AS s ON s.id = r.subject_id
+			INNER JOIN Exams AS e ON e.id = r.exam_id
+			INNER JOIN Students AS st ON st.id = r.student_id
+			WHERE r.score >= 50
+			GROUP BY Subject, Skills
+		) AS Sub
+		GROUP BY Subject
+		HAVING Count(*) = 1;
+		
 --8. Select all subjects which exams passed only students with the different primary skills. It means that all students passed the exam for the one subject must have different primary skill. – 0.4 points
-
+SELECT Subject
+		FROM (
+			SELECT DISTINCT s.name as Subject, st.primary_skill AS Skills
+			FROM ExamResults AS r
+			INNER JOIN Subjects AS s ON s.id = r.subject_id
+			INNER JOIN Exams AS e ON e.id = r.exam_id
+			INNER JOIN Students AS st ON st.id = r.student_id
+			WHERE r.score >= 50
+			GROUP BY Subject, Skills
+		) AS Sub
+		GROUP BY Subject
+		HAVING Count(*) > 1;
+		
 --9. Select students who do not pass any exam using each of the following operator: – 0.5 points
 --	* Outer join
 --	* Subquery with ‘not in’ clause
